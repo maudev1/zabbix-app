@@ -21,6 +21,8 @@
     "vue": "vue/dist/vue.common.js"
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
     "vue": "^2.0.1"
   },
   "devDependencies": {
