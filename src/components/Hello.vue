@@ -1,66 +1,75 @@
 <template>
   <div id="hello">
-    <img src="http://vuejs.org/images/logo.png" />
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li>
-        <a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a>
-      </li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li>
-        <a href="https://github.com/vuejs/vueify" target="_blank">vueify</a>
-      </li>
-      <li>
-        <a href="https://github.com/vuejs/awesome-vue" target="_blank"
-          >awesome-vue</a
-        >
-      </li>
-    </ul>
+    <h1>teste teste teste</h1>
+    <h2>{{ item }}</h2>
+
+    <button @click="listHosts(hosts)">teste listHosts</button>
   </div>
 </template>
 
 <script>
+const dotenv = require("dotenv");
+const axios = require("axios");
+
+dotenv.config({ path: "./" });
+
 export default {
   name: "hello",
   data() {
     return {
-      msg: "Welcome to Your Vue.js App",
+      item: "",
+      hosts: [],
     };
   },
   mounted() {
-    const host = process.env.ZB_HOST
-    const user = process.env.ZB_USER
-    const password = process.env.ZB_PASS
-
-    axios.get(`${host}/zabbix/api_jsonrpc.php`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Basic Og==",
-      },
-      data: {
-        jsonrpc: "2.0",
-        method: "user.login",
-        params: {
-          user: user,
-          password: password
+    axios
+      .get("http://10.11.0.22/zabbix/api_jsonrpc.php", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Basic Og==",
         },
-      },
-    });
+        data: {
+          jsonrpc: "2.0",
+          method: "host.get",
+          params: {
+            output: ["hostid", "host"],
+            selectInterfaces: ["interfaceid", "ip"]},
+          id: 2,
+          auth: "e4457827e9e0c381bcc4a1231830c33a"
+        }
+      })
+      .then((response) => (this.item = response.data))
+
+      .catch((errors) => error.response(console.log(errors)));
+  },
+  methods: {
+    listHosts: (hosts) => {
+      axios
+        .get("http://10.11.0.22/zabbix/api_jsonrpc.php", {
+          headers: { "Content-Type": "application/json" },
+          data: {
+            jsonrpc: "2.0",
+            method: "host.get",
+            params: {
+              output: ["hostid", "host"],
+              selectInterfaces: ["interfaceid", "ip"],
+              id: 2,
+              auth: "e4457827e9e0c381bcc4a1231830c33a"
+            }
+          }
+        })
+        .then(function(response){
+          data = JSON.parse(response.data)
+          console.log(data)
+        })
+      
+        
+        .catch(function (error) {
+          
+        });
+    },
   },
 };
-
-require('dotenv').config({path:'/'})
-
-const axios = require("axios");
-
 </script>
 
 <style scoped>
@@ -92,3 +101,4 @@ a {
   color: #42b983;
 }
 </style>
+

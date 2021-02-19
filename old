@@ -1,0 +1,13 @@
+const axios = require('axios')
+    
+    axios.get('http://10.11.0.22/zabbix/api_jsonrpc.php',{
+      headers:{'Content-Type':'application/json', Authorization:'Basic Og=='},
+      data:{
+        jsonrpc:'2.0',
+        method:'user.login',
+        params:{
+          user:'Admin', password:'681945abc123@'
+        }
+      }
+    })
+    
